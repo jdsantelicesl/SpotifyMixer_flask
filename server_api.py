@@ -15,7 +15,7 @@ client_secret = os.getenv("CLIENT_SECRET")
 
 redirect_uri = "http://localhost:8888/callback"
 state = ""  # replace with your state value
-scope = 'user-read-private user-read-email user-modify-playback-state user-top-read'
+scope = 'user-read-private user-read-email user-modify-playback-state user-top-read app-remote-control'
 redirect_uri = "http://localhost:8888/callback"
 
 # Step 1: Redirect the user to the authorization page
@@ -64,6 +64,8 @@ def callback():
 
         query_url = url + "?" + query
         result = get(query_url, headers=headers)
+        print("result:")
+        print(result)
         json_result = json.loads(result.content)["artists"]["items"]
         if len(json_result) == 0:
             print("No artist found")
@@ -112,6 +114,8 @@ def callback():
         query_url = url + "?" + query
         print(query_url)
         result = get(query_url, headers=headers)
+        print("result: ")
+        print(result)
         json_result = json.loads(result.content)
         if len(json_result) == 0:
             print("None found")
@@ -128,17 +132,17 @@ def callback():
     song2 = search_for_song(token, "Hasta La Raiz")
     print("search for song")
     print(song2["id"])
-    queueReult = queue_song(token, song2["id"])
-    user_top = get_user_top(token, "tracks", "long_term", "10", "10")
+    queueResult = queue_song(token, song2["id"])
+    user_top = get_user_top(token, "tracks", "medium_term", "10", "0")
     print(user_top["items"])
 
     for idx, song in enumerate(user_top["items"]):
         print(idx+1, ". ", song["name"], sep="")
-       # queue_song(token, song["id"])
+        #queue_song(token, song["id"])
 
 
     return token
 
 if __name__ == '__main__':
-    app.run(port=8888)
+    app.run(port=8888, debug=True)
     
